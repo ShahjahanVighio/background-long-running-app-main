@@ -6,9 +6,14 @@ frontend:
         - npm ci
     build:
       commands:
-        # Amplify Gen 2 SSR does NOT automatically pass console env vars to the
-        # runtime. Bake them into .env.production so Next.js picks them up.
+        # Purana step jo chal raha tha
         - env | grep -E "^(S3_BUCKET|SQS_QUEUE_URL|DYNAMODB_TABLE)=" >> .env.production
+        
+        # Naya step: Fake keys ko asli AWS keys bana kar fail mein inject karna
+        - echo "AWS_ACCESS_KEY_ID=$MY_AWS_KEY" >> .env.production
+        - echo "AWS_SECRET_ACCESS_KEY=$MY_AWS_SECRET" >> .env.production
+        - echo "AWS_REGION=us-east-1" >> .env.production
+        
         - npm run build
   artifacts:
     baseDirectory: .next
